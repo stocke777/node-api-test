@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require('body-parser')
 const axios = require('axios');
+const db = require('./sqliteDB');
 
 
 const app = express();
@@ -50,6 +51,19 @@ app.get("/data", async (req, res) => {
       }
 	
 	// res.send(data);
+
+});
+
+
+app.get("/sqlite", async (req, res) => {
+    try {
+        const users = await db('users').select();
+        const posts = await db('posts').select();
+        res.json({...users, ...posts});
+      } catch (error) {
+        console.error('Error:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
 
 });
 
